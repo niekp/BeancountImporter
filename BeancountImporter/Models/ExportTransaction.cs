@@ -18,12 +18,18 @@ namespace BeancountImporter.Models
         public string Amount { get; set; }
 
         [Index(17)]
-        public string Description {
-            get {
+        public string Description
+        {
+            get
+            {
                 return description.Replace("'", "");
             }
             set => description = value;
         }
+
+        public string AssetAccount { get; set; }
+
+        public string ExpenseAccount { get; set; }
 
         public string Beancount
         {
@@ -33,11 +39,11 @@ namespace BeancountImporter.Models
 
                 var dateArray = Date.Split("-");
 
-                output.Append(String.Format("{0}-{1}-{2} * {3}\n",
+                output.Append(String.Format("{0}-{1}-{2} * \"{3}\"\n",
                     dateArray[2], dateArray[1], dateArray[0], Description));
 
-                output.Append(String.Format(" {0} {1} EUR\n", "asset rekening", Amount));
-                output.Append(String.Format(" {0}\n\n", "expense rekening"));
+                output.Append(String.Format(" {0} {1} EUR\n", AssetAccount, Amount));
+                output.Append(String.Format(" {0}\n\n", ExpenseAccount));
                 return output.ToString();
             }
         }

@@ -6,13 +6,22 @@ namespace BeancountImporter
     {
         static void Main(string[] args)
         {
-            var fileHandler = new FileHandler();
+            var configuration = new Configuration();
+            if (!configuration.IsValid())
+            {
+                Console.WriteLine("Invalid configuration.");
+                return;
+            }
 
+            var fileHandler = new FileHandler(configuration);
             var transactions = fileHandler.GetExportTransactions();
+
 
             foreach (var transaction in transactions)
             {
-                Console.WriteLine(transaction.Beancount);
+                transaction.ExpenseAccount = configuration.DefaultExpenseAccount;
+                transaction.AssetAccount = configuration.DefaultAssetAccount;
+                fileHandler.WriteToBeancount(transaction);
             }
         }
     }

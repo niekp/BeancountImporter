@@ -9,35 +9,18 @@ namespace BeancountImporter
 {
     public class FileHandler
     {
-        private string _beancountFile;
         private string _exportFile;
+        private Configuration _configuration;
 
-        public FileHandler()
+        public FileHandler(Configuration configuration)
         {
-            LocateBeancount();
+            _configuration = configuration;
             LocateExportFile();
-            Console.WriteLine(_exportFile);
-        }
-
-        private string GetHomeDirectory()
-        {
-            return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        }
-
-        private void LocateBeancount()
-        {
-            _beancountFile = String.Format("{0}/kasboek/kasboek2.beancount", GetHomeDirectory());
-            if (!File.Exists(_beancountFile))
-            {
-                throw new FileNotFoundException("Beancount file not found");
-            }
         }
 
         private void LocateExportFile()
         {
-            string downloadFolder = String.Concat(GetHomeDirectory(), "/Downloads");
-
-            var exportFile = Directory.GetFiles(downloadFolder, "*.csv").FirstOrDefault();
+            var exportFile = Directory.GetFiles(_configuration.DownloadsDirectory, "*.csv").FirstOrDefault();
             if (exportFile != null)
             {
                 _exportFile = exportFile;
@@ -46,7 +29,7 @@ namespace BeancountImporter
 
         public List<ExportTransaction> GetExportTransactions()
         {
-            if (_exportFile == null || _exportFile == String.Empty)
+            if (string.IsNullOrEmpty(_exportFile))
             {
                 return new List<ExportTransaction>();
             }
@@ -58,6 +41,14 @@ namespace BeancountImporter
                 csv.Configuration.MissingFieldFound = null;
                 csv.Configuration.Delimiter = ",";
                 return csv.GetRecords<ExportTransaction>().ToList();
+            }
+        }
+
+        public void WriteToBeancount(ExportTransaction exportTransaction)
+        {
+            using (var writer = File.AppendText(_configuration.BeancountFile))
+            {
+                writer.Write(exportTransaction.Beancount);
             }
         }
     }

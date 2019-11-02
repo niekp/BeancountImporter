@@ -7,8 +7,17 @@
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="12.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="ConfigurationFactory.cs" />
   </ItemGroup>
 </Project>
