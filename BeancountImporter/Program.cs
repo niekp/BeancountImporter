@@ -1,4 +1,5 @@
 ﻿using System;
+using BeancountImporter.Models;
 
 namespace BeancountImporter
 {
@@ -14,13 +15,24 @@ namespace BeancountImporter
             }
 
             var fileHandler = new FileHandler(configuration);
+            var ruleset = new Ruleset(configuration);
+
             var transactions = fileHandler.GetExportTransactions();
 
 
             foreach (var transaction in transactions)
             {
-                transaction.ExpenseAccount = configuration.DefaultExpenseAccount;
-                transaction.AssetAccount = configuration.DefaultAssetAccount;
+                var rule = ruleset.FindRule(transaction);
+
+                if (rule == null) {
+                    transaction.ExpenseAccount = configuration.DefaultExpenseAccount;
+                    transaction.AssetAccount = configuration.DefaultAssetAccount;
+                } else {
+                    transaction.ExpenseAccount = rule.ExpenseAccount ?? configuration.DefaultExpenseAccount;
+                    transaction.AssetAccount = rule.AssetAccount ?? configuration.DefaultAssetAccount;
+                    transaction.Description = rule.Title ?? transaction.Description;
+                }
+
                 fileHandler.WriteToBeancount(transaction);
             }
         }
