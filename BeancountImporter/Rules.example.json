@@ -1,0 +1,25 @@
+﻿[
+  {
+    "Search": {
+      "Description": "supermarket"
+    },
+    "ExpenseAccount": "Expenses:Groceries",
+    "Title": "Groceries"
+  },
+  {
+    "Search": {
+      "Description": "Snackbar"
+    },
+    "ExpenseAccount": "Expenses:Snackbar",
+    "Title": "Snackbar"
+  },
+  {
+    "Search": {
+      "Description": "Some service",
+      "Person": "A person"
+    },
+    "ExpenseAccount": "Income:SomeService",
+    "AssetAccount": "Assets:Bank",
+    "Title": "Payment for x by y"
+  }
+]
