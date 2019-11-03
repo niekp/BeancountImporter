@@ -19,7 +19,6 @@ namespace BeancountImporter
 
             var transactions = fileHandler.GetExportTransactions();
 
-
             foreach (var transaction in transactions)
             {
                 var rule = ruleset.FindRule(transaction);
@@ -35,6 +34,9 @@ namespace BeancountImporter
 
                 fileHandler.WriteToBeancount(transaction);
             }
+
+            Console.WriteLine(String.Format("{0} transactions imported", transactions.Count));
+            fileHandler.MarkAsDone();
         }
     }
 }

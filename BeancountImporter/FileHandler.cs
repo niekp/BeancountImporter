@@ -51,5 +51,15 @@ namespace BeancountImporter
                 writer.Write(exportTransaction.Beancount);
             }
         }
+
+        public void MarkAsDone()
+        {
+            if (string.IsNullOrEmpty(_exportFile))
+            {
+                return;
+            }
+
+            File.Move(_exportFile, String.Concat(_exportFile, ".done"));
+        }
     }
 }
