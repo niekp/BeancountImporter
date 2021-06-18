@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using BeancountImporter.Models;
 using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace BeancountImporter
 {
@@ -34,14 +37,17 @@ namespace BeancountImporter
                 return new List<ExportTransaction>();
             }
 
-            using (var reader = new StreamReader(_exportFile))
-            using (var csv = new CsvReader(reader))
-            {
-                csv.Configuration.HasHeaderRecord = false;
-                csv.Configuration.MissingFieldFound = null;
-                csv.Configuration.Delimiter = ",";
-                return csv.GetRecords<ExportTransaction>().ToList();
-            }
+            
+            var config = new CsvConfiguration(new CultureInfo("nl-NL")) {
+                HasHeaderRecord = false,
+                MissingFieldFound = null,
+                Delimiter = ","
+            };
+
+            using var reader = new StreamReader(_exportFile);
+            using var csv = new CsvReader(reader, config);
+            
+            return csv.GetRecords<ExportTransaction>().ToList();
         }
 
         public void WriteToBeancount(ExportTransaction exportTransaction)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using BeancountImporter.Models;
 
 namespace BeancountImporter
@@ -19,7 +20,7 @@ namespace BeancountImporter
 
             var transactions = fileHandler.GetExportTransactions();
 
-            foreach (var transaction in transactions)
+            foreach (var transaction in transactions.OrderBy(t => t.Date))
             {
                 var rule = ruleset.FindRule(transaction);
 
